@@ -1,3 +1,5 @@
+from collections import deque
+
 class Graph:
     """ A Python Implementation of a Basic Directed Graph.
     """
@@ -42,6 +44,10 @@ class Graph:
             color_str = "" if self.color is None else f":{self.color}"
             return f"({self.key}{color_str})"
 
+        def __repr__(self):
+            color_str = "" if self.color is None else f":{self.color}"
+            return f"({self.key}{color_str})"
+
     class Edge:
         """Simple Edge class that stores a source and target and a weight."""
 
@@ -54,6 +60,10 @@ class Graph:
             weight_str = "" if self.weight is None else f"[{self.weight}]"
             return f"{self.source}-{weight_str}->{self.target}"
 
+        def __repr__(self):
+            weight_str = "" if self.weight is None else f"[{self.weight}]"
+            return f"{self.source}-{weight_str}->{self.target}"
+
     def __init__(self):
         """Creates an empty graph with no Vertices and no Edges."""
         self.V = 0
@@ -61,6 +71,10 @@ class Graph:
         self.vertices = {}
 
     def __str__(self):
+        """Prints basic information about the graph."""
+        return f"Vertices:{self.V}, Edges:{self.E}, Degree:{self.degree()}"
+    
+    def __repr__(self):
         """Prints basic information about the graph."""
         return f"Vertices:{self.V}, Edges:{self.E}, Degree:{self.degree()}"
 
@@ -123,6 +137,24 @@ class Graph:
 
             yield curr
 
+    def breadth_first_search(self, start):
+        if start not in self.vertices.keys():
+            raise KeyError(f"Key: {start} does not exist in the graph.")
+
+        queue = [self.vertices[start]]
+        visited = []
+
+        while queue:
+            curr = queue.pop(0)
+            if curr in visited:
+                continue
+            visited.append(curr)
+            for edge in curr.get_edges():
+                if edge.target not in visited:
+                    queue.append(edge.target)
+            
+            yield curr
+
     def is_acyclic(self):
         """Performs a complete search of the graph, halting when a cycle is found or when all vertices in
          the graph have been traversed.
@@ -181,7 +213,12 @@ if __name__ == "__main__":
     g.add_edge('c','b')
     g.add_edge('b','a')
 
+    print("DFS - Using a Stack")
     for v in g.depth_first_search('a'):
+        print(v)
+
+    print("BFS - Using a Queue")
+    for v in g.breadth_first_search('a'):
         print(v)
 
     cycle = Graph()
