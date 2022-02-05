@@ -115,6 +115,8 @@ if __name__ == "__main__":
     c = naive_matrix_multiplication_lists(a, b)
     print("List Results:\n", c)
 
+    res = karatsuba(14199, 8675)
+
     A = np.array(a)
     B = np.array(b)
     C = naive_matrix_multiplication_np(A, B)
